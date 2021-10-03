@@ -203,5 +203,119 @@ string toHex(int num) {
 
 
 
+#### [166. 分数到小数](https://leetcode-cn.com/problems/fraction-to-recurring-decimal/)
+
+给定两个整数，分别表示分数的分子 `numerator` 和分母 `denominator`，以 **字符串形式返回小数** 。
+
+如果小数部分为循环小数，则将循环的部分括在括号内。
+
+如果存在多个答案，只需返回 **任意一个** 。
+
+对于所有给定的输入，**保证** 答案字符串的长度小于 `104` 。
+
+ 
+
+**示例 1：**
+
+```
+输入：numerator = 1, denominator = 2
+输出："0.5"
+```
+
+**示例 2：**
+
+```
+输入：numerator = 2, denominator = 1
+输出："2"
+```
+
+**示例 3：**
+
+```
+输入：numerator = 2, denominator = 3
+输出："0.(6)"
+```
+
+**示例 4：**
+
+```
+输入：numerator = 4, denominator = 333
+输出："0.(012)"
+```
+
+**示例 5：**
+
+```
+输入：numerator = 1, denominator = 5
+输出："0.2"
+```
+
+ 
+
+**提示：**
+
+- `-231 <= numerator, denominator <= 231 - 1`
+- `denominator != 0`
+
+```c++
+ string fractionToDecimal(int numerator, int denominator) {
+        // 转 long 计算，防止溢出
+        long a = numerator, b = denominator;
+
+        // 如果本身能够整除，直接返回计算结果
+        if (a % b == 0) return to_string(a / b);
+
+        string ans;
+        // 如果其一为负数，先追加负号
+        if (a * b < 0) ans.push_back('-');
+        a = abs(a); b = abs(b);
+
+        // 计算小数点前的部分，并将余数赋值给 a
+        ans += to_string(a / b) + ".";
+        a %= b;
+
+        unordered_map<long, int> map;
+        while (a != 0) {
+            // 记录当前余数所在答案的位置，并继续模拟除法运算
+            map[a] =  ans.size();
+            a *= 10;
+            ans += to_string(a / b);
+            a %= b;
+            // 如果当前余数之前出现过，则将 [出现位置 到 当前位置] 的部分抠出来（循环小数部分）
+            if (map.find(a) != map.end()) {
+                int u = map[a];
+                string ret = ans.substr(0,u) + "(" + ans.substr(u, ans.size()-u+1) + ")";
+                return ret;
+            }
+        }
+        return ans;
+    }
+
+
+//特判整除的情况，哈希表记录每次除后分子对应的下标，用于寻找循环节
+
+//本质就是竖式除法，每次后补0继续除，直到循环或者除到0
+ string fractionToDecimal(int numerator, int denominator) {
+        if((int64_t)numerator % denominator == 0) return to_string((int64_t)numerator / denominator);
+
+        int64_t up = abs((int64_t)numerator), down = abs((int64_t)denominator);
+        string ans(((numerator < 0) ^ (denominator < 0) ? "-" : "") + to_string(up / down) + '.');
+        unordered_map<int64_t, int> index;
+
+        for(int i = ans.size(); up = up % down * 10; ++i){
+            if(index.count(up)) {
+                ans.insert(begin(ans) + index[up], '(');
+                ans.push_back(')');
+                break;
+            }
+            index[up] = i;
+            ans.push_back('0' + up / down);
+        }
+        return ans;
+    }
+```
+
+
+
 
 
