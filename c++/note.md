@@ -1,3 +1,59 @@
+#### Dijkstra算法
+
+重新复习一下Dijkstra算法
+
+Dijkstra算法是一种基于贪心策略的算法，用于求单源最短路径（单源：从一个顶点出发,Dijkstra算法只能求一个顶点到其他点的最短距离而不能任意两点）。每次新扩展一个路程最短的点，更新与其相邻的点的路程。注意在权值为负的情况下，Dijkstra算法不适用。
+
+贪心算法是指，在对问题求解时，总是做出在当前看来是最好的选择。也就是说，不从整体最优上加以考虑，他所做出的是在某种意义上的局部最优解。如在Dijkstra算法中，我们总是选定离起点最近的点加入已选定点集合中。
+
+三个步骤：①：更新结点信息     ②：扫描未选定结点   ③：选定最近点
+
+
+
+
+
+
+
+![image-20210905194509310](C:\Users\phantump\AppData\Roaming\Typora\typora-user-images\image-20210905194509310.png)
+
+我们将所有点分为已选的顶点与未选的顶点。
+
+首先，我们选定一个点做为起点，这里选定A做为起点，D为目的点，A为已选定点，其余点为未选定点，初始时起点与未选定点的距离设为无穷大。
+
+![image-20210906092838927](C:\Users\phantump\AppData\Roaming\Typora\typora-user-images\image-20210906092838927.png)
+
+![](C:\Users\phantump\AppData\Roaming\Typora\typora-user-images\image-20210906090742033.png)
+
+接下来扫描未选定点，A相邻点为B、F、G、H，则我们选定最近的H加入已选定点集合中，此时已经选定点集合为{A、H}，更新结点信息，H的父结点为A，状态改变为已选定，距离定为1。
+
+![image-20210906093040874](C:\Users\phantump\AppData\Roaming\Typora\typora-user-images\image-20210906093040874.png)
+
+![image-20210906091448117](C:\Users\phantump\AppData\Roaming\Typora\typora-user-images\image-20210906091448117.png)
+
+接下来重复以上步骤。继续扫描未选定点，A、H的相邻点为B、F、G，我们选定最近的G加入已选定点中，此时已经选定点的集合为{A，H，G}，更新结点信息，E与A距离更新为11，父结点改为G，F与A距离更新为8，父结点改为G，继续扫描。
+
+![image-20210906094501693](C:\Users\phantump\AppData\Roaming\Typora\typora-user-images\image-20210906094501693.png)
+
+A->G->F小于A->F，更新结点F与起点的距离，将父结点由A改为G，选定最近点B加入选定点中......
+
+
+
+
+
+
+
+得下表，则A到D点最近距离为16。
+
+注意经过点与起点的最短距离也已经确定。
+
+![image-20211009220450250](C:\Users\phantump\AppData\Roaming\Typora\typora-user-images\image-20211009220450250.png)
+
+
+
+
+
+
+
 ### unordered_set和unordered_map
 
   C++ 11中出现了两种新的关联容器:unordered_set和unordered_map，其内部实现与set和map大有不同，set和map内部实现是基于RB-Tree，而unordered_set和unordered_map内部实现是基于哈希表(hashtable)，由于unordered_set和unordered_map内部实现的公共接口大致相同，所以本文以unordered_set为例。

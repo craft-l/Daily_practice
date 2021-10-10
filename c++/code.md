@@ -1,3 +1,67 @@
+[TOC]
+
+
+
+#### 1976.到达目的地的方案数（Dijkstra算法
+
+你在一个城市里，城市由 n 个路口组成，路口编号为 0 到 n - 1 ，某些路口之间有 双向 道路。输入保证你可以从任意路口出发到达其他任意路口，且任意两个路口之间最多有一条路。
+
+给你一个整数 n 和二维整数数组 roads ，其中 roads[i] = [ui, vi, timei] 表示在路口 ui 和 vi 之间有一条需要花费 timei 时间才能通过的道路。你想知道花费 最少时间 从路口 0 出发到达路口 n - 1 的方案数。
+
+请返回花费 最少时间 到达目的地的 路径数目 。由于答案可能很大，将结果对 109 + 7 取余 后返回。
+
+ 
+
+示例 1：
+
+![img](https://assets.leetcode.com/uploads/2021/07/17/graph2.png)
+
+输入：n = 7, roads = [[0,6,7],[0,1,2],[1,2,3],[1,3,3],[6,3,3],[3,5,1],[6,5,1],[2,5,1],[0,4,5],[4,6,2]]
+输出：4
+解释：从路口 0 出发到路口 6 花费的最少时间是 7 分钟。
+四条花费 7 分钟的路径分别为：
+
+- 0 ➝ 6
+- 0 ➝ 4 ➝ 6
+- 0 ➝ 1 ➝ 2 ➝ 5 ➝ 6
+- 0 ➝ 1 ➝ 3 ➝ 5 ➝ 6
+  示例 2：
+
+输入：n = 2, roads = [[1,0,10]]
+输出：1
+解释：只有一条从路口 0 到路口 1 的路，花费 10 分钟。
+
+
+提示：
+
+1 <= n <= 200
+n - 1 <= roads.length <= n * (n - 1) / 2
+roads[i].length == 3
+0 <= ui, vi <= n - 1
+1 <= timei <= 109
+ui != vi
+任意两个路口之间至多有一条路。
+从任意路口出发，你能够到达其他任意路口。
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/number-of-ways-to-arrive-at-destination
+
+
+
+
+
+解法：这道题就是最短路径算法了
+
+以下
+
+
+
+
+
+
+
+
+
 #### [1436. 旅行终点站](https://leetcode-cn.com/problems/destination-city/)
 
 给你一份旅游线路图，该线路图中的旅行线路用数组 `paths` 表示，其中 `paths[i] = [cityAi, cityBi]` 表示该线路将会从 `cityAi` 直接前往 `cityBi` 。请你找出这次旅行的终点站，即没有任何可以通往其他城市的线路的城市*。*
@@ -44,9 +108,7 @@
 - `cityAi != cityBi`
 - 所有字符串均由大小写英文字母和空格字符组成。
 
-
-
-### 思路分析：
+**思路分析：**
 
 题目说了只有一个旅行终点站，所以终点站只会出现在cityB中，那么只要找到只在cityB中出现的城市就好了。
 
@@ -490,5 +552,72 @@ public:
  * obj->addNum(val);
  * vector<vector<int>> param_2 = obj->getIntervals();
  */
+```
+
+
+
+
+
+#### [441. 排列硬币](https://leetcode-cn.com/problems/arranging-coins/)
+
+你总共有 `n` 枚硬币，并计划将它们按阶梯状排列。对于一个由 `k` 行组成的阶梯，其第 `i` 行必须正好有 `i` 枚硬币。阶梯的最后一行 **可能** 是不完整的。
+
+给你一个数字 `n` ，计算并返回可形成 **完整阶梯行** 的总行数
+
+**思路**
+
+看到的时候直接想到累加
+
+```c++
+    int arrangeCoins(int n) {
+        long int i = 0;
+        long int sum = 0;
+        if(n == 0) return 0;
+        while(sum <= n)
+        {
+            sum += ++i;
+        }
+        return --i;
+    }
+```
+
+但是上面的方法效率太低了，接下来用数学方法以及二分查找
+
+```c++
+/*数学
+等差数列，第k行放满一共需要k*(k+1)/2
+令其等于n，得k^2 + k - 2n = 0，可求出 k
+因为需要得到完整行数，所以我们向下取整
+*/
+int arrangeCoins(int n) {
+        return (int) ((sqrt((long long) 8 * n + 1) - 1) / 2);
+    }
+
+
+/*二分查找
+第 i 行必须有 i 个硬币（最后一行除外），所以，到第 i 行时总共使用的硬币数量为 total=i(i+1)/2，现在我们的目标是寻找这么一个 i 使用得 total 小于或等于 n，而且这个 i 的范围我们知道它在 1 到 n 之间。
+所以，我们可以使用二分查找来解决本题。
+*/
+ public int arrangeCoins(int n) {
+        // 1,2,3,4,5
+        // 到第 k 行时的总硬币数等于 k(k+1)/2
+        // 只要找到最接近 n 的那个 k 就可以了
+        // 所以，我们可以使用二分查找
+        long left = 1, right = n;
+        while (left <= right) {
+            long mid = left + (right - left) / 2;
+            long total = mid * (mid + 1) / 2;
+            if (total == n) {
+                return (int) mid;
+            }
+            if (total > n) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        return (int) right;
+    }
 ```
 
