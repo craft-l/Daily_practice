@@ -10,8 +10,6 @@
 
 请返回花费 最少时间 到达目的地的 路径数目 。由于答案可能很大，将结果对 109 + 7 取余 后返回。
 
- 
-
 示例 1：
 
 ![img](https://assets.leetcode.com/uploads/2021/07/17/graph2.png)
@@ -620,4 +618,98 @@ int arrangeCoins(int n) {
         return (int) right;
     }
 ```
+
+#### [273. 整数转换英文表示](https://leetcode-cn.com/problems/integer-to-english-words/)
+
+将非负整数 `num` 转换为其对应的英文表示。
+
+**示例 1：**
+
+```
+输入：num = 123
+输出："One Hundred Twenty Three"
+```
+
+**示例 2：**
+
+```
+输入：num = 12345
+输出："Twelve Thousand Three Hundred Forty Five"
+```
+
+**示例 3：**
+
+```
+输入：num = 1234567
+输出："One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven"
+```
+
+**示例 4：**
+
+```
+输入：num = 1234567891
+输出："One Billion Two Hundred Thirty Four Million Five Hundred Sixty Seven Thousand Eight Hundred Ninety One"
+```
+
+ 
+
+**提示：**
+
+- `0 <= num <= 231 - 1`
+
+
+
+**补充**：注意string 和stringbuilder的区别，这里可以用stringbuilder
+
+```c++
+class Solution {
+public:
+vector<string> singles = {"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"};
+    vector<string> teens = {"Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
+    vector<string> tens = {"", "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
+    vector<string> thousands = {"", "Thousand", "Million", "Billion"};
+
+    string numberToWords(int num) {
+        if (num == 0) {
+            return "Zero";
+        }
+        string sb;
+        for (int i = 3, unit = 1000000000; i >= 0; i--, unit /= 1000) {
+            int curNum = num / unit;
+            if (curNum != 0) {
+                num -= curNum * unit;
+                string curr;
+                recursion(curr, curNum);
+                curr = curr + thousands[i] + " ";
+                sb = sb + curr;
+            }
+        }
+        while (sb.back() == ' ') {
+            sb.pop_back();
+        }
+        return sb;
+    }
+    void recursion(string & curr, int num) {
+        if (num == 0) {
+            return;
+        } else if (num < 10) {
+            curr = curr + singles[num] + " ";
+        } else if (num < 20) {
+            curr = curr + teens[num - 10] + " ";
+        } else if (num < 100) {
+            curr = curr + tens[num / 10] + " ";
+            recursion(curr, num % 10);
+        } else {
+            curr = curr + singles[num / 100] + " Hundred ";
+            recursion(curr, num % 100);
+        }
+    }
+
+    
+};
+```
+
+
+
+
 
