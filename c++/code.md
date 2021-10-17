@@ -1088,6 +1088,10 @@ vector<string> answer;
 
 ```
 
+
+
+
+
 #### [282. 给表达式添加运算符](https://leetcode-cn.com/problems/expression-add-operators/)
 
 给定一个仅包含数字 `0-9` 的字符串 `num` 和一个目标值整数 `target` ，在 `num` 的数字之间添加 **二元** 运算符（不是一元）`+`、`-` 或 `*` ，返回所有能够得到目标值的表达式。
@@ -1136,3 +1140,67 @@ vector<string> answer;
 - `1 <= num.length <= 10`
 - `num` 仅含数字
 - `-231 <= target <= 231 - 1`
+
+#### [230. 二叉搜索树中第K小的元素](https://leetcode-cn.com/problems/kth-smallest-element-in-a-bst/)
+
+难度中等505
+
+给定一个二叉搜索树的根节点 `root` ，和一个整数 `k` ，请你设计一个算法查找其中第 `k` 个最小元素（从 1 开始计数）。
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2021/01/28/kthtree1.jpg)
+
+```
+输入：root = [3,1,4,null,2], k = 1
+输出：1
+```
+
+**示例 2：**
+
+![img](https://assets.leetcode.com/uploads/2021/01/28/kthtree2.jpg)
+
+```
+输入：root = [5,3,6,2,4,null,null,1], k = 3
+输出：3
+```
+
+ 
+
+ 
+
+**提示：**
+
+- 树中的节点数为 `n` 。
+- `1 <= k <= n <= 104`
+- `0 <= Node.val <= 104`
+
+ 
+
+**进阶：**如果二叉搜索树经常被修改（插入/删除操作）并且你需要频繁地查找第 `k` 小的值，你将如何优化算法？
+
+
+
+```c++
+    int kthSmallest(TreeNode* root, int k) {
+stack<TreeNode *> stack;
+        while (root != nullptr || stack.size() > 0) {
+            while (root != nullptr) {
+                stack.push(root);
+                root = root->left;
+            }
+            root = stack.top();
+            stack.pop();
+            --k;
+            if (k == 0) {
+                break;
+            }
+            root = root->right;
+        }
+        return root->val;
+
+    }
+```
+
