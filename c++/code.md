@@ -1755,3 +1755,73 @@ private:
     }
 ```
 
+#### [301. 删除无效的括号](https://leetcode-cn.com/problems/remove-invalid-parentheses/)
+
+给你一个由若干括号和字母组成的字符串 `s` ，删除最小数量的无效括号，使得输入的字符串有效。
+
+返回所有可能的结果。答案可以按 **任意顺序** 返回。
+
+ 
+
+**示例 1：**
+
+```
+输入：s = "()())()"
+输出：["(())()","()()()"]
+```
+
+**示例 2：**
+
+```
+输入：s = "(a)())()"
+输出：["(a())()","(a)()()"]
+```
+
+**示例 3：**
+
+```
+输入：s = ")("
+输出：[""]
+```
+
+ 
+
+**提示：**
+
+- `1 <= s.length <= 25`
+- `s` 由小写英文字母以及括号 `'('` 和 `')'` 组成
+- `s` 中至多含 `20` 个括号
+
+```c++
+  vector<string> removeInvalidParentheses(string s) {
+        vector<string> res;
+        remove(move(s), {'(', ')'}, 0, 0, res);
+        return res;
+    }
+    
+    void remove(std::string s, const vector<char>& par, int m, int n, vector<string>& res) {
+        int stack = 0, i = m;
+        for (int i = m; i < s.length(); ++i) {
+            if (s[i] == par[0]) stack++;
+            if (s[i] == par[1]) stack--;
+            if (stack >= 0) continue;
+            // "右"括号多出来了，删除一个右括号
+            for (int j = n; j <= i; ++j) {
+                if (s[j] == par[1] && (j == n || s[j-1] != par[1])) {
+                    auto ss = s.substr(0, j) + s.substr(j + 1);
+                    remove(move(ss), par, i, j, res);
+                }
+            }
+
+            return;
+        }
+        
+        reverse(s.begin(), s.end());
+        if (par[0] == '(') {
+            remove(move(s), {par[1], par[0]}, 0, 0, res);
+        } else {
+            res.push_back(move(s));
+        }
+    }
+```
+
